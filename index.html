@@ -1,32 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="icon" type="image/png" href="logo.png">
-    <link rel="apple-touch-icon" href="logo.png">
+    <link rel="icon" type="image/png" href="doctors appoitment logo.png">
+    <link rel="apple-touch-icon" href="doctors appoitment logo.png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BC | Admin Calendar</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css">
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
     <style>
-        :root { --green: #2D9546; --blue: #1E5B9A; --gold: #F9C21C; }
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f4f7f6; margin: 0; padding: 10px; }
+        /* NEW COLOR THEME MATCHED TO YOUR LOGO */
+        :root {
+            --bc-green: #37A25F;   /* The dominant green from your logo */
+            --bc-blue: #0A3A74;    /* The rich blue from your logo text */
+            --bc-accent: #FDC600;  /* The bright yellow accent from your logo */
+            --light-bg: #f4f7f6;
+        }
+
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--light-bg); margin: 0; padding: 10px; }
         
-        header { text-align: center; padding: 15px; background: white; border-radius: 15px; margin-bottom: 10px; border-bottom: 4px solid var(--gold); }
-        .logo-img { height: 50px; margin-bottom: 5px; }
-        
+        /* THEMATIC HEADER */
+        header { 
+            text-align: center; 
+            padding: 20px; 
+            background: white; 
+            border-radius: 15px; 
+            margin-bottom: 15px; 
+            border-bottom: 5px solid var(--bc-accent); /* A thematic accent line */
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .logo-img { height: 60px; margin-bottom: 5px; vertical-align: middle; }
+        .app-name { font-size: 0.9em; color: #666; font-weight: 500; text-transform: uppercase; letter-spacing: 1px; }
+
         #calendar-card { background: white; padding: 15px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); }
         
-        /* Event Box Styling */
+        /* FullCalendar Customizations using Logo Colors */
+        .fc-toolbar-title { color: var(--bc-blue) !important; font-weight: bold; }
+        .fc-button-primary { 
+            background-color: var(--bc-green) !important; 
+            border: none !important; 
+            text-transform: capitalize !important;
+            transition: 0.2s;
+        }
+        .fc-button-primary:hover { background-color: var(--bc-blue) !important; }
+        .fc-day-today { background-color: rgba(253, 198, 0, 0.1) !important; } /* Light yellow for today */
+
+        /* Event Box Styling (Default Blue Theme) */
         .fc-event { 
             cursor: pointer; 
             padding: 4px !important; 
             border: none !important;
-            background-color: var(--blue) !important;
+            background-color: var(--bc-blue) !important; /* Theme Blue */
             margin-bottom: 2px !important;
+            border-radius: 5px;
         }
 
-        /* Custom Inner Event Styling */
+        /* Custom Inner Event Styling (Bold Name, Smaller Time) */
         .event-title-stack { font-size: 0.85em; color: white; line-height: 1.2; }
         .event-name { font-weight: bold; display: block; text-transform: uppercase; font-size: 0.9em; }
         .event-time { font-weight: normal; opacity: 0.9; font-size: 0.8em; }
@@ -34,27 +63,35 @@
         /* Modal Styling */
         #booking-modal { 
             display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 90%; max-width: 380px; background: white; padding: 25px; z-index: 100;
-            border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            width: 90%; max-width: 380px; background: white; padding: 30px; z-index: 100;
+            border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.4);
         }
-        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 90; backdrop-filter: blur(2px); }
+        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 90; backdrop-filter: blur(3px); }
         
+        /* Modal Form Inputs */
         .form-group { margin-bottom: 15px; }
         label { display: block; font-size: 11px; color: #666; margin-bottom: 5px; font-weight: bold; letter-spacing: 1px; }
-        input, select, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 10px; font-size: 16px; box-sizing: border-box; }
+        input, select, textarea { 
+            width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 12px; font-size: 16px; 
+            box-sizing: border-box; background: #fafafa;
+        }
+        input:focus, textarea:focus, select:focus { border-color: var(--bc-blue); outline: none; }
         
-        .save-btn { background: var(--green); color: white; border: none; width: 100%; padding: 15px; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 16px; }
-        .close-btn { background: transparent; color: #888; margin-top: 10px; border: none; width: 100%; padding: 10px; cursor: pointer; text-decoration: underline; }
+        /* Theme-Matched Save Button */
+        .save-btn { 
+            background: var(--bc-green); color: white; border: none; width: 100%; padding: 16px; 
+            border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 16px; transition: 0.2s;
+        }
+        .save-btn:hover { background-color: var(--bc-blue); }
+        .close-btn { background: transparent; color: #999; margin-top: 10px; border: none; width: 100%; padding: 10px; cursor: pointer; text-decoration: underline; font-size: 14px; }
     </style>
 </head>
 <body>
 
     <header>
         <div class="logo">
-            <img src="logo.pgn.pgn" alt="Brazilian Cleaning" class="logo-img" onerror="this.style.display='none'">
-            <div style="font-weight:900; font-size:22px;">
-                <span style="color:var(--green)">BRAZILIAN</span> <span style="color:var(--blue)">CLEANING</span>
-            </div>
+            <img src="doctors appoitment logo.jpg" alt="Brazilian Cleaning Logo" class="logo-img" onerror="this.src='fallback_logo.png';">
+            <div class="app-name">Admin Schedule Manager</div>
         </div>
     </header>
 
@@ -65,7 +102,7 @@
     <div class="overlay" id="overlay" onclick="closeModal()"></div>
     
     <div id="booking-modal">
-        <h3 id="selected-date-display" style="color:var(--blue); margin:0 0 20px 0;">New Appointment</h3>
+        <h3 id="selected-date-display" style="color:var(--bc-blue); margin:0 0 20px 0; font-size: 1.3em;">New Appointment</h3>
         
         <div class="form-group">
             <label>CLIENT NAME</label>
@@ -74,18 +111,18 @@
 
         <div style="display: flex; gap: 10px;">
             <div class="form-group" style="flex: 1;">
-                <label>START</label>
+                <label>START TIME</label>
                 <select id="start-time"></select>
             </div>
             <div class="form-group" style="flex: 1;">
-                <label>END</label>
+                <label>END TIME</label>
                 <select id="end-time"></select>
             </div>
         </div>
 
         <div class="form-group">
             <label>NOTES & ADDRESS</label>
-            <textarea id="notes" rows="3" placeholder="Address..."></textarea>
+            <textarea id="notes" rows="3" placeholder="Notes..."></textarea>
         </div>
 
         <button class="save-btn" onclick="saveAppointment()">SAVE TO CALENDAR</button>
@@ -95,8 +132,10 @@
     <script>
         let calendar;
         let selectedDateStr;
+        // Appointments are saved across visits using LocalStorage
         let appointments = JSON.parse(localStorage.getItem('cleaning_appts')) || [];
 
+        // Generate Time Dropdown Options
         function populateTimes() {
             const startSelect = document.getElementById('start-time');
             const endSelect = document.getElementById('end-time');
@@ -104,11 +143,13 @@
                 let h = i > 12 ? i-12 : i;
                 let ampm = i >= 12 ? 'PM' : 'AM';
                 let display = `${h}:00 ${ampm}`;
+                // Store in 24h HH:mm format for sorting
                 let value = i < 10 ? `0${i}:00` : `${i}:00`;
                 startSelect.add(new Option(display, value));
                 endSelect.add(new Option(display, value));
             }
-            endSelect.selectedIndex = 2;
+            startSelect.selectedIndex = 1; // 8:00 AM default
+            endSelect.selectedIndex = 3;   // 10:00 AM default
         }
         populateTimes();
 
@@ -118,26 +159,29 @@
                 initialView: 'dayGridMonth',
                 headerToolbar: { left: 'prev,next today', center: 'title', right: '' },
                 height: 'auto',
-                events: appointments,
-                // THE FIX: This part forces the name above the time
+                events: appointments, // Load saved appointments
+                
+                // Customize how the event bubble looks: Name above time
                 eventContent: function(arg) {
                     let timeText = arg.timeText; // e.g., "8:00 AM"
                     let nameText = arg.event.title; // e.g., "John Smith"
                     
-                    let arrayOfDomNodes = [
-                        Object.assign(document.createElement('div'), {
-                            className: 'event-title-stack',
-                            innerHTML: `<span class="event-name">${nameText}</span><span class="event-time">${timeText}</span>`
-                        })
-                    ];
-                    return { domNodes: arrayOfDomNodes };
+                    let stack = document.createElement('div');
+                    stack.className = 'event-title-stack';
+                    stack.innerHTML = `<span class="event-name">${nameText}</span><span class="event-time">${timeText}</span>`;
+                    
+                    return { domNodes: [stack] };
                 },
+                
+                // Open modal on empty date click
                 dateClick: function(info) {
                     openModal(info.dateStr);
                 },
+                
+                // Confirm and delete appointment on click
                 eventClick: function(info) {
-                    const notes = info.event.extendedProps.notes || "No notes";
-                    if(confirm(`CLIENT: ${info.event.title}\nNOTES: ${notes}\n\nDelete this?`)) {
+                    const notes = info.event.extendedProps.notes || "No notes provided.";
+                    if(confirm(`CLIENT: ${info.event.title}\nNOTES: ${notes}\n\nDo you want to delete this appointment?`)) {
                         info.event.remove();
                         appointments = appointments.filter(e => 
                             !(e.title === info.event.title && e.start === info.event.startStr)
@@ -151,7 +195,7 @@
 
         function openModal(date) {
             selectedDateStr = date;
-            document.getElementById('selected-date-display').innerText = "Book: " + date;
+            document.getElementById('selected-date-display').innerText = "Book for " + date;
             document.getElementById('booking-modal').style.display = 'block';
             document.getElementById('overlay').style.display = 'block';
         }
@@ -162,20 +206,26 @@
             const endTime = document.getElementById('end-time').value;
             const notes = document.getElementById('notes').value;
 
-            if(!name) { alert("Please enter a client name"); return; }
+            if(!name) { alert("Please enter a client name."); return; }
+
+            // Combine Date and Time into an ISO 8601 string
+            const fullStart = `${selectedDateStr}T${startTime}:00`;
+            const fullEnd = `${selectedDateStr}T${endTime}:00`;
 
             const newEvent = {
                 title: name,
-                start: `${selectedDateStr}T${startTime}:00`,
-                end: `${selectedDateStr}T${endTime}:00`,
+                start: fullStart,
+                end: fullEnd,
                 extendedProps: { notes: notes },
-                allDay: false
+                allDay: false // Show the time block
             };
 
             appointments.push(newEvent);
             localStorage.setItem('cleaning_appts', JSON.stringify(appointments));
             calendar.addEvent(newEvent);
+            
             closeModal();
+            // Reset input fields
             document.getElementById('client-name').value = "";
             document.getElementById('notes').value = "";
         }
