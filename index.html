@@ -1,31 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="icon" type="image/png" href="doctors appoitment logo.png">
-    <link rel="apple-touch-icon" href="doctors appoitment logo.png">
+    <link rel="icon" type="image/png" href="Doctors appointment logo.png">
+    <link rel="apple-touch-icon" href="Doctors appointment logo.png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Doctor's Appointment | Admin Calendar</title>
+    <title>Doctor's Appointment | Admin</title>
     
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css">
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
     
     <style>
-        /* BRAND COLORS FROM LOGO */
         :root { 
-            --doc-navy: #1A3668;   /* Navy from 'DOCTOR'S' text */
-            --doc-green: #4D9345;  /* Green from 'APPOINTMENT' text */
-            --doc-accent: #E8F0F8; /* Light blue background accent */
+            --doc-navy: #1A3668; 
+            --doc-green: #4D9345;
+            --doc-accent: #E8F0F8;
         }
 
-        body { 
-            font-family: 'Segoe UI', Roboto, Arial, sans-serif; 
-            background: #f0f4f7; 
-            margin: 0; 
-            padding: 10px; 
-        }
+        body { font-family: 'Segoe UI', Roboto, Arial, sans-serif; background: #f0f4f7; margin: 0; padding: 10px; }
         
-        /* HEADER WITH LOGO AND TITLE */
         header { 
             text-align: center; 
             padding: 20px; 
@@ -36,9 +29,10 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.05);
         }
         
-      .logo-img { 
-            height: 80px; 
+        .logo-img { 
+            height: 90px; 
             margin-bottom: 10px; 
+            object-fit: contain;
         }
 
         .header-title {
@@ -52,19 +46,14 @@
         .text-navy { color: var(--doc-navy); }
         .text-green { color: var(--doc-green); }
 
-        /* CALENDAR CONTAINER */
-        #calendar-card { 
-            background: white; 
-            padding: 15px; 
-            border-radius: 15px; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08); 
-        }
+        #calendar-card { background: white; padding: 15px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); }
         
-        /* CALENDAR EVENT STYLING */
+        /* Calendar Buttons & Labels */
         .fc-toolbar-title { color: var(--doc-navy) !important; font-weight: 700; }
         .fc-button-primary { background-color: var(--doc-navy) !important; border: none !important; }
         .fc-button-primary:hover { background-color: var(--doc-green) !important; }
 
+        /* Event Bubbles */
         .fc-event { 
             cursor: pointer; 
             padding: 5px !important; 
@@ -72,15 +61,13 @@
             background-color: var(--doc-navy) !important;
             border-left: 4px solid var(--doc-green) !important;
             margin-bottom: 3px !important;
-            border-radius: 4px;
         }
 
-        /* Forces Name above Time */
         .event-title-stack { color: white; line-height: 1.2; overflow: hidden; }
-        .event-name { font-weight: bold; display: block; text-transform: uppercase; font-size: 0.85em; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
+        .event-name { font-weight: bold; display: block; text-transform: uppercase; font-size: 0.85em; }
         .event-time { font-weight: normal; opacity: 0.9; font-size: 0.75em; }
 
-        /* MODAL / POPUP STYLING */
+        /* Modal */
         #booking-modal { 
             display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
             width: 90%; max-width: 400px; background: white; padding: 25px; z-index: 100;
@@ -89,18 +76,17 @@
         .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 90; backdrop-filter: blur(3px); }
         
         .form-group { margin-bottom: 15px; }
-        label { display: block; font-size: 11px; color: var(--doc-navy); margin-bottom: 5px; font-weight: bold; letter-spacing: 0.5px; }
+        label { display: block; font-size: 11px; color: var(--doc-navy); margin-bottom: 5px; font-weight: bold; }
         input, select, textarea { width: 100%; padding: 12px; border: 1px solid #ced4da; border-radius: 10px; font-size: 16px; box-sizing: border-box; }
         
-        .save-btn { background: var(--doc-green); color: white; border: none; width: 100%; padding: 15px; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 16px; transition: 0.3s; }
-        .save-btn:hover { background: var(--doc-navy); }
+        .save-btn { background: var(--doc-green); color: white; border: none; width: 100%; padding: 15px; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 16px; }
         .close-btn { background: transparent; color: #888; margin-top: 10px; border: none; width: 100%; padding: 10px; cursor: pointer; text-decoration: underline; }
     </style>
 </head>
 <body>
 
     <header>
-        <img src="doctors appoitment logo.jpg" alt="Doctor's Appointment Logo" class="logo-img">
+        <img src="Doctors appointment logo.png" alt="Logo" class="logo-img">
         <h1 class="header-title">
             <span class="text-navy">DOCTOR'S</span> 
             <span class="text-green">APPOINTMENT</span>
@@ -144,7 +130,6 @@
     <script>
         let calendar;
         let selectedDateStr;
-        // Stores data locally in your browser
         let appointments = JSON.parse(localStorage.getItem('doc_calendar_data')) || [];
 
         function populateTimes() {
@@ -158,7 +143,7 @@
                 startSelect.add(new Option(display, value));
                 endSelect.add(new Option(display, value));
             }
-            endSelect.selectedIndex = 1; // Default end time 1 hour later
+            endSelect.selectedIndex = 1;
         }
         populateTimes();
 
@@ -169,22 +154,16 @@
                 headerToolbar: { left: 'prev,next today', center: 'title', right: '' },
                 height: 'auto',
                 events: appointments,
-                
-                // Forces Name above Time on the monthly grid
                 eventContent: function(arg) {
                     let stack = document.createElement('div');
                     stack.className = 'event-title-stack';
                     stack.innerHTML = `<span class="event-name">${arg.event.title}</span><span class="event-time">${arg.timeText}</span>`;
                     return { domNodes: [stack] };
                 },
-                
-                dateClick: function(info) {
-                    openModal(info.dateStr);
-                },
-                
+                dateClick: function(info) { openModal(info.dateStr); },
                 eventClick: function(info) {
                     const notes = info.event.extendedProps.notes || "No notes";
-                    if(confirm(`PATIENT: ${info.event.title}\nNOTES: ${notes}\n\nDelete this appointment?`)) {
+                    if(confirm(`PATIENT: ${info.event.title}\nNOTES: ${notes}\n\nDelete?`)) {
                         info.event.remove();
                         appointments = appointments.filter(e => !(e.title === info.event.title && e.start === info.event.startStr));
                         localStorage.setItem('doc_calendar_data', JSON.stringify(appointments));
@@ -206,9 +185,7 @@
             const startTime = document.getElementById('start-time').value;
             const endTime = document.getElementById('end-time').value;
             const notes = document.getElementById('notes').value;
-
-            if(!name) { alert("Please enter a patient name"); return; }
-
+            if(!name) { alert("Enter patient name"); return; }
             const newEvent = {
                 title: name,
                 start: `${selectedDateStr}T${startTime}:00`,
@@ -216,11 +193,9 @@
                 extendedProps: { notes: notes },
                 allDay: false
             };
-
             appointments.push(newEvent);
             localStorage.setItem('doc_calendar_data', JSON.stringify(appointments));
             calendar.addEvent(newEvent);
-            
             closeModal();
             document.getElementById('patient-name').value = "";
             document.getElementById('notes').value = "";
@@ -232,4 +207,4 @@
         }
     </script>
 </body>
-</html>
+</html>>
